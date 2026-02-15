@@ -1,0 +1,38 @@
+/*
+    We used this tracepoint for detect ATTACH and DETACH of ptrace
+    Run this as: sudo bpftrace signal_observer.bt <TARGET_PID>
+    Example: sudo bpftrace signal_observer.bt 3351
+*/
+
+BEGIN {
+    printf("Tracing ptrace events... Press Ctrl+C to stop.\n");
+}
+
+/*
+    When ptrace tries attach to the program. This tracepoint will be triggered.
+*/
+tracepoint:syscalls:sys_enter_ptrace
+{
+    if (args->request == 16) // 16 = PTRACE_ATTACH
+    {
+        printf("PTRACE ATTACH  Detected! And its PID is %d \n", args->pid);
+    }
+    else if(args->request == 17) // 17 = PTRACE_DETACH
+    {
+        printf("PTRACE DETACH  Detected! And its PID is %d \n", args->pid);
+    }
+}
+
+/*
+    Kernel sending signals will be captured through this tracepoint
+*/
+tracepoint:signal:signal_generate 
+{
+    if(args->pid == (int32)$1)
+    {
+        if(args->sig == 19) // 19 = SIGSTOP
+        {
+            printf("Kernel sent SIGSTOP signal for %s process and its PID is %d\n", args->comm, args->pid);
+        }
+    }
+}
