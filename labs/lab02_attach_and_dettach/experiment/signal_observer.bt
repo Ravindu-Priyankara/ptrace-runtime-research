@@ -1,7 +1,19 @@
 /*
-    We used this tracepoint for detect ATTACH and DETACH of ptrace
-    Run this as: sudo bpftrace signal_observer.bt <TARGET_PID>
-    Example: sudo bpftrace signal_observer.bt 3351
+ *  signal_observer.bt
+ *
+ *  eBPF-based tracer for observing ptrace attach/detach behavior.
+ *
+ *  Correlates:
+ *      - sys_enter_ptrace
+ *      - signal_generate
+ *
+ *  Confirms that PTRACE_ATTACH triggers kernel-generated SIGSTOP
+ *  for the target process.
+ *
+ *  Built for experimental verification of documented ptrace behavior.
+ *
+ *  Run this as: sudo bpftrace signal_observer.bt <TARGET_PID>
+ *  Example: sudo bpftrace signal_observer.bt 3351
 */
 
 BEGIN {
@@ -9,7 +21,7 @@ BEGIN {
 }
 
 /*
-    When ptrace tries attach to the program. This tracepoint will be triggered.
+*   When ptrace tries attach to the program. This tracepoint will be triggered.
 */
 tracepoint:syscalls:sys_enter_ptrace
 {
@@ -24,8 +36,9 @@ tracepoint:syscalls:sys_enter_ptrace
 }
 
 /*
-    Kernel sending signals will be captured through this tracepoint
+*   Kernel sending signals will be captured through this tracepoint
 */
+
 tracepoint:signal:signal_generate 
 {
     if(args->pid == (int32)$1)
