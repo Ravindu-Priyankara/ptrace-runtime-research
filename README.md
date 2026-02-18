@@ -29,40 +29,18 @@ Rather than building large tools, the goal is to:
 
 No obfuscation, no exploitation — only controlled experiments.
 
-## Lab Series Overview
 
-01_attach_detach  
-    Study process interruption and tracer ownership boundaries.
-
-02_register_control  
-    Observe how register manipulation affects execution flow.
-
-03_memory_introspection  
-    Compare runtime memory state with on-disk binaries.
-
-04_breakpoints  
-    Recreate debugger-style software breakpoints.
-
-05_syscall_tracing  
-    Monitor syscall entry/exit and analyze execution transitions.
-
-06_runtime_mutation  
-    Explore behavior modification without altering binaries.
-
-07_detection_artifacts  
-    Identify how tracing activity becomes visible to the traced process.
-
-
-### Lab 01 – Self-Aware Process Under Tracing
-
-A running process monitors its own execution state and reacts when a
-tracer attaches or detaches.
-
-Research focus:
-- Detection via kernel-exposed metadata
-- Execution pauses introduced by attach
-- Timing anomalies and signal transitions
-- Ownership boundaries enforced by the kernel
+## Current Status
+```
+[x] 01_self_aware_process_under_ptrace
+[x] 02_attach_and_dettach
+[ ] 03_register_control  
+[ ] 04_memory_introspection
+[ ] 05_breakpoints 
+[ ] 06_syscall_tracing
+[ ] 07_runtime_mutation
+[ ] 08_detection_artifacts
+```
 
 ## Environment
 
